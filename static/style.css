@@ -539,6 +539,28 @@ summary:hover {
     color: var(--text-secondary);
 }
 
+.progression-cell {
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+.progression-cell.stars-gold {
+    color: #ffd700;
+}
+
+.progression-cell.stars-red {
+    color: #ff4444;
+}
+
+.progression-cell.stars-blue {
+    color: #00bfff;
+}
+
+.progression-cell.stars-wings {
+    color: #ffd700;
+    text-shadow: 0 0 5px #ffd700;
+}
+
 /* Rarity badges in table */
 .rarity-badge.rarity-common { color: var(--rarity-common); border: 1px solid var(--rarity-common); }
 .rarity-badge.rarity-uncommon { color: var(--rarity-uncommon); border: 1px solid var(--rarity-uncommon); }

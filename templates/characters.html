@@ -18,6 +18,7 @@
                 <tr>
                     <th data-sort="string">Name <span class="sort-icon"></span></th>
                     <th data-sort="string">Faction <span class="sort-icon"></span></th>
+                    <th data-sort="number">Stars <span class="sort-icon"></span></th>
                     <th data-sort="number">Level <span class="sort-icon"></span></th>
                     <th data-sort="number">Rank <span class="sort-icon"></span></th>
                     <th data-sort="number">Active <span class="sort-icon"></span></th>
@@ -39,6 +40,7 @@
                             <span class="faction-badge">{{ unit.get('faction', '-')|camel_to_spaces }}</span>
                         </a>
                     </td>
+                    <td class="progression-cell stars-{{ unit.get('progressionIndex', 0)|progression_class }}" data-value="{{ unit.get('progressionIndex', 0) }}">{{ unit.get('progressionIndex', 0)|progression_stars }}</td>
                     <td class="level-cell" data-value="{{ unit.get('xpLevel', 0) }}">{{ unit.get('xpLevel', '-') }}</td>
                     <td class="rank-cell" data-value="{{ unit.get('rank', 0) }}">{{ unit.get('rank', 0)|rank_name }}</td>
                     <td class="ability-cell" data-value="{{ unit.get('abilities', [{}])[0].get('level', 0) if unit.get('abilities') else 0 }}">

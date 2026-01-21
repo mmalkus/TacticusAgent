@@ -55,6 +55,67 @@ def rank_name(value):
         return f"Rank {value}"
 
 
+@app.template_filter('progression_name')
+def progression_name(value):
+    """Convert progression index to (rarity, star_count, color_class) based on Tacticus progression."""
+    if value is None or not isinstance(value, int):
+        return (str(value), 0, 'gold')
+
+    # Progression mapping based on https://tacticus.wiki.gg/wiki/Unit_Progression
+    # Known examples from user:
+    # - Index 8 (Plagueburst Crawler) = Rare 1 red
+    # - Index 13 (Farsight) = Legendary 3 red
+    # - Index 15 (Trajann) = Legendary 1 blue
+    # - Index 16 (Xybia) = Mythic 1 blue
+    # - Index 18 (Neurothrope) = Mythic 3 blue
+    # (rarity, star_count, color_class)
+    progression_map = {
+        1: ('Common', 1, 'gold'),
+        2: ('Common', 2, 'gold'),
+        3: ('Uncommon', 2, 'gold'),
+        4: ('Uncommon', 3, 'gold'),
+        5: ('Uncommon', 4, 'gold'),
+        6: ('Rare', 4, 'gold'),
+        7: ('Rare', 5, 'gold'),
+        8: ('Rare', 1, 'red'),
+        9: ('Epic', 1, 'red'),         # Plagueburst Crawler
+        10: ('Epic', 2, 'red'),
+        11: ('Epic', 3, 'red'),
+        12: ('Legendary', 3, 'red'),
+        13: ('Legendary', 4, 'red'),
+        14: ('Legendary', 5, 'red'), 
+        15: ('Legendary', 1, 'blue'),  # Trajann
+        16: ('Mythic', 1, 'blue'),     # Xybia
+        17: ('Mythic', 2, 'blue'),
+        18: ('Mythic', 3, 'blue'),     # Neurothrope
+        19: ('Mythic', 1, 'wings'),
+    }
+
+    if value in progression_map:
+        return progression_map[value]
+    elif value > 19:
+        # Extended wings
+        return ('Mythic', value - 18, 'wings')
+    else:
+        return (f'P{value}', 0, 'gold')
+
+
+@app.template_filter('progression_stars')
+def progression_stars(value):
+    """Get the star display for progression."""
+    rarity, count, color = progression_name(value)
+    if color == 'wings':
+        return f"{rarity} Wings" if count == 1 else f"{rarity} Wings {count}"
+    return f"{rarity} {'★' * count}"
+
+
+@app.template_filter('progression_class')
+def progression_class(value):
+    """Get the color class for progression."""
+    _, _, color = progression_name(value)
+    return color
+
+
 def ensure_data_dir():
     """Ensure the data directory exists."""
     if not os.path.exists(DATA_DIR):
