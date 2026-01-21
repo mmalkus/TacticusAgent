@@ -431,6 +431,75 @@ a:hover {
     background-color: var(--bg-tertiary);
 }
 
+/* Sortable table headers */
+.sortable th[data-sort] {
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    padding-right: 1.5rem;
+}
+
+.sortable th[data-sort]:hover {
+    background-color: var(--bg-secondary);
+}
+
+.sortable th[data-sort]::after {
+    content: '⇅';
+    position: absolute;
+    right: 0.5rem;
+    opacity: 0.3;
+    font-size: 0.8rem;
+}
+
+.sortable th.sort-asc::after {
+    content: '↑';
+    opacity: 1;
+}
+
+.sortable th.sort-desc::after {
+    content: '↓';
+    opacity: 1;
+}
+
+/* Username input */
+.username-input {
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 0.4rem 0.6rem;
+    border-radius: 4px;
+    width: 100%;
+    min-width: 150px;
+    font-size: 0.9rem;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.username-input:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+}
+
+.username-input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.6;
+}
+
+.username-input.saved {
+    border-color: var(--accent-green);
+    background-color: rgba(63, 185, 80, 0.1);
+}
+
+/* Boss detail page */
+.boss-rarity {
+    display: inline-block;
+    margin-left: 1rem;
+    padding: 0.25rem 0.75rem;
+    background-color: var(--bg-tertiary);
+    border-radius: 4px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
 /* Raw JSON */
 details {
     margin-top: 1rem;

@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}Guild Raid - Tacticus Agent{% endblock %}
+
+{% block content %}
+<div class="guild-raid-page">
+    <div class="page-header">
+        <h1>Guild Raid</h1>
+        {% if updated_at %}
+        <span class="last-updated">Last updated: {{ updated_at }}</span>
+        {% endif %}
+    </div>
+
+    {% if raid %}
+    <div class="data-section">
+        <h2>Raid Info</h2>
+        <div class="info-grid">
+            {% if raid.get('season') %}
+            <div class="info-item">
+                <span class="label">Season</span>
+                <span class="value">{{ raid.season }}</span>
+            </div>
+            {% endif %}
+            <div class="info-item">
+                <span class="label">Total Attacks</span>
+                <span class="value">{{ raid.get('entries', [])|length }}</span>
+            </div>
+        </div>
+    </div>
+
+    {% if bosses %}
+    <div class="data-section">
+        <h2>Damage per Boss</h2>
+        <div class="bosses-table-wrapper">
+            <table class="members-table sortable" id="boss-table">
+                <thead>
+                    <tr>
+                        <th data-sort="string">Boss</th>
+                        <th data-sort="rarity">Rarity</th>
+                        <th data-sort="number">#</th>
+                        <th data-sort="number">Min</th>
+                        <th data-sort="number">Avg</th>
+                        <th data-sort="number">Max</th>
+                        <th data-sort="number">Std</th>
+                        <th data-sort="number">Damage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for boss in bosses %}
+                    <tr>
+                        <td><a href="{{ url_for('guild_raid_boss', boss_type=boss.name, rarity=boss.rarity, boss_set=boss.set) }}">{{ boss.name | camel_to_spaces }}</a></td>
+                        <td data-rarity="{{ boss.rarity }}" data-set="{{ boss.set }}">{{ boss.rarity }} {{ boss.set + 1 }}</td>
+                        <td>{{ boss.tier_count }}</td>
+                        <td data-value="{{ boss.min_damage }}">{{ '{:,}'.format(boss.min_damage) }}</td>
+                        <td data-value="{{ boss.avg_damage }}">{{ '{:,.0f}'.format(boss.avg_damage) }}</td>
+                        <td data-value="{{ boss.max_damage }}">{{ '{:,}'.format(boss.max_damage) }}</td>
+                        <td data-value="{{ boss.stddev }}">{{ '{:,.0f}'.format(boss.stddev) }}</td>
+                        <td data-value="{{ boss.damage }}">{{ '{:,}'.format(boss.damage) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="7">Total</th>
+                        <th>{{ '{:,}'.format(bosses | sum(attribute='damage')) }}</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const table = document.getElementById('boss-table');
+        const headers = table.querySelectorAll('th[data-sort]');
+        const tbody = table.querySelector('tbody');
+
+        const rarityOrder = {'Common': 0, 'Uncommon': 1, 'Rare': 2, 'Epic': 3, 'Legendary': 4, 'Mythic': 5};
+
+        // Default sort: rarity (column 1) descending
+        let currentSort = {column: 1, direction: 'desc'};
+        headers[1].classList.add('sort-desc');
+
+        headers.forEach((header, index) => {
+            header.style.cursor = 'pointer';
+            header.addEventListener('click', () => {
+                const sortType = header.dataset.sort;
+                const direction = (currentSort.column === index && currentSort.direction === 'asc') ? 'desc' : 'asc';
+
+                const rows = Array.from(tbody.querySelectorAll('tr'));
+
+                rows.sort((a, b) => {
+                    let aVal, bVal;
+
+                    if (sortType === 'number') {
+                        aVal = parseFloat(a.cells[index].dataset.value || a.cells[index].textContent) || 0;
+                        bVal = parseFloat(b.cells[index].dataset.value || b.cells[index].textContent) || 0;
+                    } else if (sortType === 'rarity') {
+                        const aRarity = rarityOrder[a.cells[index].dataset.rarity] ?? 99;
+                        const bRarity = rarityOrder[b.cells[index].dataset.rarity] ?? 99;
+                        const aSet = parseInt(a.cells[index].dataset.set) || 0;
+                        const bSet = parseInt(b.cells[index].dataset.set) || 0;
+                        aVal = aRarity * 100 + aSet;
+                        bVal = bRarity * 100 + bSet;
+                    } else {
+                        aVal = a.cells[index].textContent.trim();
+                        bVal = b.cells[index].textContent.trim();
+                    }
+
+                    if (aVal < bVal) return direction === 'asc' ? -1 : 1;
+                    if (aVal > bVal) return direction === 'asc' ? 1 : -1;
+                    return 0;
+                });
+
+                rows.forEach(row => tbody.appendChild(row));
+
+                headers.forEach(h => h.classList.remove('sort-asc', 'sort-desc'));
+                header.classList.add(direction === 'asc' ? 'sort-asc' : 'sort-desc');
+
+                currentSort = {column: index, direction};
+            });
+        });
+    });
+    </script>
+    {% endif %}
+
+    {% elif error %}
+    <div class="error-message">
+        <p>{{ error }}</p>
+        <p class="hint">Make sure your API key has the "Guild Raid" scope enabled.</p>
+    </div>
+    {% else %}
+    <p class="error">No guild raid data available.</p>
+    {% endif %}
+</div>
+{% endblock %}

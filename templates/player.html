@@ -15,28 +15,25 @@
     <div class="data-section">
         <h2>Account Info</h2>
         <div class="info-grid">
-            {% if player.get('username') %}
+            {% set player_details = player.get('player', {}).get('details', {}) %}
+            {% set player_name = player_details.get('name', '') %}
+            {% if player_name %}
             <div class="info-item">
-                <span class="label">Username</span>
-                <span class="value">{{ player.username }}</span>
+                <span class="label">Player</span>
+                <span class="value">{{ player_name.split('\\')[0] }}</span>
             </div>
             {% endif %}
-            {% if player.get('level') %}
+            {% set guild_name = guild.get('guild', {}).get('name') or guild.get('name') if guild else none %}
+            {% if guild_name %}
             <div class="info-item">
-                <span class="label">Level</span>
-                <span class="value">{{ player.level }}</span>
+                <span class="label">Guild</span>
+                <span class="value">{{ guild_name }}</span>
             </div>
             {% endif %}
-            {% if player.get('power') %}
+            {% if player_details.get('powerLevel') %}
             <div class="info-item">
                 <span class="label">Power</span>
-                <span class="value">{{ player.power }}</span>
-            </div>
-            {% endif %}
-            {% if player.get('lastUpdatedOn') %}
-            <div class="info-item">
-                <span class="label">Last Updated</span>
-                <span class="value">{{ player.lastUpdatedOn }}</span>
+                <span class="value">{{ player_details.powerLevel }}</span>
             </div>
             {% endif %}
         </div>
