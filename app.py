@@ -37,16 +37,16 @@ def camel_to_underscores(value):
 
 @app.template_filter('rank_name')
 def rank_name(value):
-    """Convert rank number to name: 1 -> Stone I, 10 -> Silver I, etc."""
-    if not value or not isinstance(value, int):
+    """Convert rank number to name: 0 -> Stone I, 9 -> Silver I, etc."""
+    if value is None or not isinstance(value, int):
         return value
 
     tiers = ['Stone', 'Iron', 'Bronze', 'Silver', 'Gold', 'Diamond', 'Adamantine']
     numerals = ['I', 'II', 'III']
 
-    # Ranks are 1-indexed, each tier has 3 levels
-    tier_index = (value - 1) // 3
-    level_index = (value - 1) % 3
+    # Ranks are 0-indexed, each tier has 3 levels
+    tier_index = value // 3
+    level_index = value % 3
 
     if tier_index < len(tiers):
         return f"{tiers[tier_index]} {numerals[level_index]}"
