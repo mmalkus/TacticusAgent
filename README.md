@@ -4,8 +4,7 @@ A Flask web application for viewing player data from the Warhammer 40,000: Tacti
 
 ## Features
 
-- **API Key Management**: Securely store your Tacticus API key
-- **Player Data**: View account info and raw API response
+- **Player Data**: View account info including player name, guild, and power level
 - **Characters Table**: Sortable table showing all your characters with:
   - Name (links to wiki)
   - Faction (links to wiki)
@@ -14,10 +13,32 @@ A Flask web application for viewing player data from the Warhammer 40,000: Tacti
   - Active and Passive ability levels
   - Upgrade slots (2x3 grid)
   - Shards (including mythic)
-- **Guild Data**: View guild information (requires guild scope)
+- **Guild Data**: View guild information with member list (requires Guild scope)
+  - Editable usernames stored locally
+  - Sortable member table with role, level
+- **Guild Raid**: View raid statistics (requires Guild Raid scope)
+  - Damage per boss with min/avg/max/stddev
+  - Click on boss for per-player breakdown
+  - Sortable tables
 - **Data Caching**: Locally cached data with manual refresh
+- **API Key Management**: Securely store your Tacticus API key
 
-## Setup
+## Quick Start
+
+### Windows
+```batch
+install.bat
+run.bat
+```
+
+### Linux/Mac
+```bash
+chmod +x install.sh run.sh
+./install.sh
+./run.sh
+```
+
+## Manual Setup
 
 1. Clone the repository
 2. Create a virtual environment:
@@ -39,7 +60,10 @@ A Flask web application for viewing player data from the Warhammer 40,000: Tacti
 
 ## Getting an API Key
 
-You can get your Tacticus API key from the [Tacticus developer portal](https://tacticus.wiki.gg/wiki/API).
+Get your Tacticus API key from [api.tacticusgame.com](https://api.tacticusgame.com/). Enable the following scopes:
+- **Player** - For player and character data
+- **Guild** - For guild member information
+- **Guild Raid** - For guild raid statistics
 
 ## License
 
