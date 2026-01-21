@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Connect - Tacticus Agent{% endblock %}
+
+{% block content %}
+<div class="connect-page">
+    <div class="connect-card">
+        <h1>Tacticus Agent</h1>
+        <p class="subtitle">View your Warhammer 40,000: Tacticus player data</p>
+
+        {% if connected %}
+        <div class="connected-status">
+            <p>You are connected to the Tacticus API.</p>
+            <a href="{{ url_for('player') }}" class="btn btn-primary">View Player Data</a>
+        </div>
+        {% else %}
+        <form method="POST" class="connect-form">
+            <div class="form-group">
+                <label for="api_key">Enter your API Key</label>
+                <input type="text"
+                       id="api_key"
+                       name="api_key"
+                       placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                       pattern="[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"
+                       required>
+                <small class="form-help">
+                    Get your API key from <a href="https://api.tacticusgame.com/" target="_blank">api.tacticusgame.com</a>
+                </small>
+            </div>
+            <button type="submit" class="btn btn-primary">Connect</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

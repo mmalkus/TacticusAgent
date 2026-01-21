@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Guild Data - Tacticus Agent{% endblock %}
+
+{% block content %}
+<div class="guild-page">
+    <h1>Guild Data</h1>
+
+    {% if guild %}
+    <div class="data-section">
+        <h2>Guild Info</h2>
+        <div class="info-grid">
+            {% if guild.get('name') %}
+            <div class="info-item">
+                <span class="label">Name</span>
+                <span class="value">{{ guild.name }}</span>
+            </div>
+            {% endif %}
+            {% if guild.get('level') %}
+            <div class="info-item">
+                <span class="label">Level</span>
+                <span class="value">{{ guild.level }}</span>
+            </div>
+            {% endif %}
+            {% if guild.get('memberCount') %}
+            <div class="info-item">
+                <span class="label">Members</span>
+                <span class="value">{{ guild.memberCount }}</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if guild.get('members') %}
+    <div class="data-section">
+        <h2>Members ({{ guild.members|length }})</h2>
+        <div class="members-table-wrapper">
+            <table class="members-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Role</th>
+                        <th>Level</th>
+                        <th>Power</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for member in guild.members %}
+                    <tr>
+                        <td>{{ member.get('username', member.get('id', 'Unknown')) }}</td>
+                        <td>{{ member.get('role', '-') }}</td>
+                        <td>{{ member.get('level', '-') }}</td>
+                        <td>{{ member.get('power', '-') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="data-section">
+        <h2>Raw Data</h2>
+        <details>
+            <summary>View raw JSON response</summary>
+            <pre class="raw-json">{{ guild|tojson(indent=2) }}</pre>
+        </details>
+    </div>
+
+    {% elif error %}
+    <div class="error-message">
+        <p>{{ error }}</p>
+        <p class="hint">Make sure your API key has the "Guild" scope enabled.</p>
+    </div>
+    {% else %}
+    <p class="error">No guild data available.</p>
+    {% endif %}
+</div>
+{% endblock %}

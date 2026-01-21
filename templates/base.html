@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Tacticus Agent{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <a href="{{ url_for('index') }}">Tacticus Agent</a>
+        </div>
+        <div class="nav-links">
+            {% if session.get('api_key') %}
+            <a href="{{ url_for('player') }}">Player</a>
+            <a href="{{ url_for('guild') }}">Guild</a>
+            <a href="{{ url_for('disconnect') }}" class="disconnect">Disconnect</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="flash flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <p>Powered by <a href="https://api.tacticusgame.com/" target="_blank">Tacticus API</a></p>
+    </footer>
+</body>
+</html>

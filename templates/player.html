@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}Player Data - Tacticus Agent{% endblock %}
+
+{% block content %}
+<div class="player-page">
+    <h1>Player Data</h1>
+
+    {% if player %}
+    <div class="data-section">
+        <h2>Account Info</h2>
+        <div class="info-grid">
+            {% if player.get('username') %}
+            <div class="info-item">
+                <span class="label">Username</span>
+                <span class="value">{{ player.username }}</span>
+            </div>
+            {% endif %}
+            {% if player.get('level') %}
+            <div class="info-item">
+                <span class="label">Level</span>
+                <span class="value">{{ player.level }}</span>
+            </div>
+            {% endif %}
+            {% if player.get('power') %}
+            <div class="info-item">
+                <span class="label">Power</span>
+                <span class="value">{{ player.power }}</span>
+            </div>
+            {% endif %}
+            {% if player.get('lastUpdatedOn') %}
+            <div class="info-item">
+                <span class="label">Last Updated</span>
+                <span class="value">{{ player.lastUpdatedOn }}</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if player.get('units') %}
+    <div class="data-section">
+        <h2>Units ({{ player.units|length }})</h2>
+        <div class="units-grid">
+            {% for unit in player.units %}
+            <div class="unit-card rarity-{{ unit.get('rarity', 'common')|lower }}">
+                <div class="unit-header">
+                    <h3>{{ unit.get('name', unit.get('id', 'Unknown')) }}</h3>
+                    {% if unit.get('rarity') %}
+                    <span class="rarity-badge">{{ unit.rarity }}</span>
+                    {% endif %}
+                </div>
+                <div class="unit-stats">
+                    {% if unit.get('rank') %}
+                    <div class="stat">
+                        <span class="stat-label">Rank</span>
+                        <span class="stat-value">{{ unit.rank }}</span>
+                    </div>
+                    {% endif %}
+                    {% if unit.get('level') %}
+                    <div class="stat">
+                        <span class="stat-label">Level</span>
+                        <span class="stat-value">{{ unit.level }}</span>
+                    </div>
+                    {% endif %}
+                    {% if unit.get('shards') is not none %}
+                    <div class="stat">
+                        <span class="stat-label">Shards</span>
+                        <span class="stat-value">{{ unit.shards }}</span>
+                    </div>
+                    {% endif %}
+                    {% if unit.get('mythicShards') is not none %}
+                    <div class="stat">
+                        <span class="stat-label">Mythic Shards</span>
+                        <span class="stat-value">{{ unit.mythicShards }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                {% if unit.get('abilities') %}
+                <div class="unit-abilities">
+                    <span class="abilities-label">Abilities:</span>
+                    {% for ability in unit.abilities %}
+                    <span class="ability-badge">{{ ability.get('name', ability.get('id', '?')) }} ({{ ability.get('level', '?') }})</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if player.get('inventory') %}
+    <div class="data-section">
+        <h2>Inventory</h2>
+        <div class="inventory-grid">
+            {% if player.inventory.get('shards') %}
+            <div class="inventory-category">
+                <h3>Shards</h3>
+                <ul class="inventory-list">
+                    {% for shard in player.inventory.shards %}
+                    <li>{{ shard.get('id', 'Unknown') }}: {{ shard.get('amount', 0) }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            {% if player.inventory.get('mythicShards') %}
+            <div class="inventory-category">
+                <h3>Mythic Shards</h3>
+                <ul class="inventory-list">
+                    {% for shard in player.inventory.mythicShards %}
+                    <li>{{ shard.get('id', 'Unknown') }}: {{ shard.get('amount', 0) }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if player.get('campaigns') %}
+    <div class="data-section">
+        <h2>Campaign Progress</h2>
+        <div class="campaigns-grid">
+            {% for campaign in player.campaigns %}
+            <div class="campaign-card">
+                <h3>{{ campaign.get('name', campaign.get('id', 'Unknown')) }}</h3>
+                {% if campaign.get('progress') %}
+                <p>Progress: {{ campaign.progress }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="data-section">
+        <h2>Raw Data</h2>
+        <details>
+            <summary>View raw JSON response</summary>
+            <pre class="raw-json">{{ player|tojson(indent=2) }}</pre>
+        </details>
+    </div>
+
+    {% else %}
+    <p class="error">No player data available.</p>
+    {% endif %}
+</div>
+{% endblock %}
