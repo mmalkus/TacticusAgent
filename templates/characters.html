@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}Characters - Tacticus Agent{% endblock %}
+
+{% block content %}
+<div class="characters-page">
+    <div class="page-header">
+        <h1>Characters ({{ units|length }})</h1>
+        {% if updated_at %}
+        <span class="last-updated">Last updated: {{ updated_at }}</span>
+        {% endif %}
+    </div>
+
+    {% if units %}
+    <div class="characters-table-wrapper">
+        <table class="characters-table sortable" id="characters-table">
+            <thead>
+                <tr>
+                    <th data-sort="string">Name <span class="sort-icon"></span></th>
+                    <th data-sort="string">Faction <span class="sort-icon"></span></th>
+                    <th data-sort="number">Level <span class="sort-icon"></span></th>
+                    <th data-sort="number">Rank <span class="sort-icon"></span></th>
+                    <th data-sort="number">Active <span class="sort-icon"></span></th>
+                    <th data-sort="number">Passive <span class="sort-icon"></span></th>
+                    <th data-sort="number">Upgrades <span class="sort-icon"></span></th>
+                    <th data-sort="number">Shards <span class="sort-icon"></span></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for unit in units %}
+                <tr>
+                    <td class="character-name">
+                        <a href="https://tacticus.wiki.gg/wiki/{{ unit.get('name', unit.get('id', 'Unknown'))|replace(' ', '_') }}" target="_blank" class="wiki-link">
+                            {{ unit.get('name', unit.get('id', 'Unknown')) }}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="https://tacticus.wiki.gg/wiki/{{ unit.get('faction', '')|camel_to_underscores }}" target="_blank" class="faction-link">
+                            <span class="faction-badge">{{ unit.get('faction', '-')|camel_to_spaces }}</span>
+                        </a>
+                    </td>
+                    <td class="level-cell" data-value="{{ unit.get('xpLevel', 0) }}">{{ unit.get('xpLevel', '-') }}</td>
+                    <td class="rank-cell" data-value="{{ unit.get('rank', 0) }}">{{ unit.get('rank', 0)|rank_name }}</td>
+                    <td class="ability-cell" data-value="{{ unit.get('abilities', [{}])[0].get('level', 0) if unit.get('abilities') else 0 }}">
+                        {% if unit.get('abilities') and unit.abilities|length > 0 %}
+                            <span class="ability-level active">{{ unit.abilities[0].get('level', '-') }}</span>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td class="ability-cell" data-value="{{ unit.get('abilities', [{}, {}])[1].get('level', 0) if unit.get('abilities') and unit.abilities|length > 1 else 0 }}">
+                        {% if unit.get('abilities') and unit.abilities|length > 1 %}
+                            <span class="ability-level passive">{{ unit.abilities[1].get('level', '-') }}</span>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td class="upgrades-cell" data-value="{{ unit.get('upgrades', [])|length }}">
+                        <div class="upgrades-grid">
+                            {% set upgrades = unit.get('upgrades', []) %}
+                            {% for i in range(6) %}
+                            <div class="upgrade-slot {{ 'active' if i in upgrades else '' }}"></div>
+                            {% endfor %}
+                        </div>
+                    </td>
+                    <td data-value="{{ unit.get('shards', 0) + unit.get('mythicShards', 0) * 1000 }}">
+                        {{ unit.get('shards', 0) }}
+                        {% if unit.get('mythicShards') %}
+                            <span class="mythic-shards">(+{{ unit.mythicShards }} mythic)</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="no-data">No characters found.</p>
+    {% endif %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const table = document.getElementById('characters-table');
+    if (!table) return;
+
+    const headers = table.querySelectorAll('th[data-sort]');
+    let currentSort = { column: -1, direction: 'asc' };
+
+    headers.forEach((header, index) => {
+        header.style.cursor = 'pointer';
+        header.addEventListener('click', () => sortTable(index, header.dataset.sort));
+    });
+
+    function sortTable(columnIndex, sortType) {
+        const tbody = table.querySelector('tbody');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+
+        // Toggle direction if same column
+        if (currentSort.column === columnIndex) {
+            currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+        } else {
+            currentSort.column = columnIndex;
+            currentSort.direction = 'desc'; // Default to descending for numbers
+        }
+
+        // Update header icons
+        headers.forEach((h, i) => {
+            const icon = h.querySelector('.sort-icon');
+            if (i === columnIndex) {
+                icon.textContent = currentSort.direction === 'asc' ? ' ▲' : ' ▼';
+            } else {
+                icon.textContent = '';
+            }
+        });
+
+        rows.sort((a, b) => {
+            const aCell = a.cells[columnIndex];
+            const bCell = b.cells[columnIndex];
+
+            let aVal, bVal;
+
+            if (sortType === 'number') {
+                aVal = parseFloat(aCell.dataset.value || aCell.textContent) || 0;
+                bVal = parseFloat(bCell.dataset.value || bCell.textContent) || 0;
+            } else {
+                aVal = aCell.textContent.trim().toLowerCase();
+                bVal = bCell.textContent.trim().toLowerCase();
+            }
+
+            if (aVal < bVal) return currentSort.direction === 'asc' ? -1 : 1;
+            if (aVal > bVal) return currentSort.direction === 'asc' ? 1 : -1;
+            return 0;
+        });
+
+        rows.forEach(row => tbody.appendChild(row));
+    }
+});
+</script>
+{% endblock %}

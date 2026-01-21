@@ -4,7 +4,12 @@
 
 {% block content %}
 <div class="player-page">
-    <h1>Player Data</h1>
+    <div class="page-header">
+        <h1>Player Data</h1>
+        {% if updated_at %}
+        <span class="last-updated">Last updated: {{ updated_at }}</span>
+        {% endif %}
+    </div>
 
     {% if player %}
     <div class="data-section">

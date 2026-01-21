@@ -85,6 +85,15 @@ a:hover {
     color: var(--accent-red);
 }
 
+.nav-links .update-btn {
+    color: var(--accent-green);
+    font-weight: 500;
+}
+
+.nav-links .update-btn:hover {
+    color: #4cc95f;
+}
+
 /* Container */
 .container {
     max-width: 1200px;
@@ -201,6 +210,30 @@ a:hover {
 .btn-primary:hover {
     background-color: #c4a030;
     text-decoration: none;
+}
+
+/* Page Header */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.page-header h1 {
+    color: var(--accent-gold);
+    margin: 0;
+}
+
+.last-updated {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    background-color: var(--bg-secondary);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
 }
 
 /* Data Sections */
@@ -445,6 +478,181 @@ summary:hover {
     text-align: center;
     color: var(--text-secondary);
     font-size: 0.875rem;
+}
+
+/* Characters Table */
+.characters-page h1 {
+    color: var(--accent-gold);
+    margin-bottom: 1.5rem;
+}
+
+.characters-table-wrapper {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow-x: auto;
+}
+
+.characters-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+}
+
+.characters-table th,
+.characters-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.characters-table th {
+    background-color: var(--bg-tertiary);
+    color: var(--text-secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+}
+
+.characters-table tbody tr:hover {
+    background-color: var(--bg-tertiary);
+}
+
+.characters-table .character-name {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.characters-table .level-cell {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.characters-table .rank-cell {
+    font-weight: 600;
+    color: var(--accent-gold);
+}
+
+.faction-badge {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+/* Rarity badges in table */
+.rarity-badge.rarity-common { color: var(--rarity-common); border: 1px solid var(--rarity-common); }
+.rarity-badge.rarity-uncommon { color: var(--rarity-uncommon); border: 1px solid var(--rarity-uncommon); }
+.rarity-badge.rarity-rare { color: var(--rarity-rare); border: 1px solid var(--rarity-rare); }
+.rarity-badge.rarity-epic { color: var(--rarity-epic); border: 1px solid var(--rarity-epic); }
+.rarity-badge.rarity-legendary { color: var(--rarity-legendary); border: 1px solid var(--rarity-legendary); }
+.rarity-badge.rarity-mythic { color: var(--rarity-mythic); border: 1px solid var(--rarity-mythic); }
+
+/* Row highlighting by rarity */
+.rarity-row-legendary .character-name { color: var(--rarity-legendary); }
+.rarity-row-mythic .character-name { color: var(--rarity-mythic); }
+.rarity-row-epic .character-name { color: var(--rarity-epic); }
+
+/* Ability levels */
+.ability-cell {
+    text-align: center;
+}
+
+.ability-level {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+    min-width: 2rem;
+    text-align: center;
+}
+
+.ability-level.active {
+    background-color: rgba(201, 48, 44, 0.2);
+    color: var(--accent-red);
+}
+
+.ability-level.passive {
+    background-color: rgba(88, 166, 255, 0.2);
+    color: var(--accent-blue);
+}
+
+/* Upgrades grid */
+.upgrades-cell {
+    text-align: center;
+}
+
+.upgrades-grid {
+    display: inline-grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    grid-auto-flow: column;
+    gap: 2px;
+    padding: 2px;
+}
+
+.upgrade-slot {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+}
+
+.upgrade-slot.active {
+    background-color: var(--accent-green);
+    border-color: var(--accent-green);
+}
+
+/* Sortable table headers */
+.characters-table.sortable th[data-sort] {
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s;
+}
+
+.characters-table.sortable th[data-sort]:hover {
+    background-color: var(--bg-secondary);
+}
+
+.sort-icon {
+    font-size: 0.7rem;
+    color: var(--accent-gold);
+}
+
+/* Wiki links */
+.wiki-link,
+.faction-link,
+.ability-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.wiki-link:hover {
+    color: var(--accent-gold);
+    text-decoration: underline;
+}
+
+.faction-link:hover .faction-badge {
+    color: var(--accent-blue);
+}
+
+.ability-link {
+    display: inline-block;
+}
+
+.ability-link:hover .ability-pill {
+    background-color: var(--bg-secondary);
+}
+
+.mythic-shards {
+    color: var(--rarity-mythic);
+    font-size: 0.8rem;
+}
+
+.no-data {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 3rem;
 }
 
 /* Responsive */
